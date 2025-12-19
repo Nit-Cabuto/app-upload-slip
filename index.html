@@ -118,6 +118,7 @@
     // const USE_LIFF = false;
     // const LIFF_ID  = "YOUR_LIFF_ID";
     const id = "2008716446-QzCHty1r"; // -- log in extract slip
+    const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb"
     // =======================
     // ตัวช่วย UI
     // =======================
@@ -210,7 +211,6 @@
         const statusDiv = document.getElementById('status');
         
         if (!f) {
-            //alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
             statusDiv.textContent = 'กรุณาเลือกไฟล์ก่อนอัปโหลด';
             statusDiv.className = 'error';
             //slipFile.focus();
@@ -219,10 +219,34 @@
 
         statusDiv.className = '';
         btnUpload.disabled = true;
-        $("#uploadForm").reset();
-        //preview.classList.add("d-none");
+        // $("#uploadForm").reset();
+        // preview.classList.add("d-none");
 
-        return; 
+        try {
+            const formData = new FormData();
+            formData.append("file", f);
+
+            const resp = await fetch(`https://developer.easyslip.com/api/v1/verify`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${tokehslip}`
+                },
+                body: formData
+            });
+
+            const json = await resp.json();
+            console.log(json);
+
+            statusDiv.textContent = 'อัปโหลดสำเร็จ';
+            statusDiv.className = '';
+
+        } catch (err) {
+            console.error(err);
+            statusDiv.textContent = 'อัปโหลดล้มเหลว: ' + (err?.message || err);
+            statusDiv.className = 'error';
+        }
+
+        
     });
 
     // // อัปโหลดไป .NET API
