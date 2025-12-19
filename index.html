@@ -121,8 +121,8 @@
     const id = "2008716446-QzCHty1r"; // -- log in extract slip
     const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
 
-    const profileName = null;
-    const userIdLine = null;
+    var profileName = null;
+    var userIdLine = null;
     // =======================
     // ตัวช่วย UI
     // =======================
@@ -292,7 +292,7 @@
 
         } catch (err) {
             console.error(err);
-            
+
             statusDiv.textContent = 'อัปโหลดล้มเหลว: ' + (err?.message || err);
             statusDiv.className = 'error';
         }
