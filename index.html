@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>อัปโหลดสลิปธนาคาร & ส่ง LINE</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background: #f6f7fb; }
+    .card { border: none; border-radius: 1rem; box-shadow: 0 8px 30px rgba(0,0,0,.06); }
+    .preview-img { max-height: 240px; object-fit: contain; border: 1px dashed #dee2e6; border-radius: .75rem; background: #fff; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <div class="card p-4 p-md-5">
+          <h1 class="h4 mb-3">อัปโหลดสลิปธนาคาร</h1>
+          <!-- <p class="text-secondary mb-4">เลือกไฟล์รูปสลิป แล้วกดอัปโหลด ระบบจะส่งไฟล์ไปยัง .NET API จากนั้นจะอ่านข้อความตอบกลับ และส่งต่อไปยัง LINE ของผู้ใช้</p> -->
+
+          <!-- (ทางเลือก) ถ้ามี LIFF: ใส่ userId อัตโนมัติ -->
+          <div class="alert alert-info d-none" id="liffBox">
+            <div class="d-flex align-items-center gap-2">
+              <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+              <strong>กำลังโหลดโปรไฟล์ LIFF...</strong>
+            </div>
+          </div>
+
+          <form id="uploadForm" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="slipFile" class="form-label">ไฟล์รูปสลิป (JPEG/PNG)</label>
+              <input class="form-control" type="file" id="slipFile" accept="image/*" required>
+              <div class="invalid-feedback">กรุณาเลือกไฟล์รูปสลิป</div>
+            </div>
+
+            <div class="row g-3 align-items-start mb-3">
+              <div class="col-md-6">
+                <img id="preview" class="img-fluid preview-img w-100 d-none" alt="ตัวอย่างรูป">
+              </div>
+              <!-- <div class="col-md-6">
+                <label class="form-label">ข้อความที่จะส่ง LINE (แก้ไขได้)</label>
+                <textarea id="lineText" class="form-control mono" rows="7"
+                  placeholder="ระบบจะใส่ผลลัพธ์จาก .NET API ให้อัตโนมัติ (แก้ไขได้ก่อนส่ง)"></textarea>
+
+                <div class="form-text mt-2">
+                  <strong>ผู้รับ LINE:</strong>
+                  <div class="input-group mt-1">
+                    <span class="input-group-text">userId</span>
+                    <input type="text" class="form-control" id="lineUserId" placeholder="ใส่ LINE userId หรือปล่อยให้ LIFF เติมให้" />
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <div class="mb-3">
+              <div class="progress d-none" id="progressWrap" style="height: 10px;">
+                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2"> 
+            <!-- <div class="d-flex gap-2"> -->
+              <button type="button" id="btnUpload" class="btn btn-primary">
+                อัปโหลด
+              </button>
+              <!-- <button type="button" id="btnSendLine" class="btn btn-success" disabled>
+                ส่งข้อความ LINE
+              </button>
+              <button type="button" id="btnReset" class="btn btn-outline-secondary">
+                รีเซ็ต
+              </button> -->
+            </div>
+          </form>
+
+          <hr class="my-4">
+
+          <!-- <div>
+            <h2 class="h6">ผลลัพธ์จาก .NET API</h2>
+            <pre id="apiResult" class="mono bg-light p-3 rounded small" style="white-space: pre-wrap;"></pre>
+          </div> -->
+
+          <!-- <div class="mt-3">
+            <h2 class="h6">สถานะ</h2>
+            <div id="statusArea" class="small text-secondary">พร้อมทำงาน</div>
+          </div> -->
+
+        </div>
+
+        <!-- <p class="text-center text-muted small mt-3">
+          *เพื่อความปลอดภัย ห้ามใส่ LINE Channel Access Token ในฝั่งเว็บ — ให้ส่งผ่าน backend เท่านั้น
+        </p> -->
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+  <script>
+    // =======================
+    // 🔧 ตั้งค่าให้ตรงระบบคุณ
+    // =======================
+    // .NET API ที่รับไฟล์ (multipart/form-data) และคืนผล
+    //const API_UPLOAD_URL = "https://localhost:7136/extractSlip/extractTextFile"; // ตัวอย่าง
+
+    // Backend endpoint ของคุณที่ทำหน้าที่ "proxy/push LINE"
+    //const LINE_PUSH_URL  = "https://localhost:7136/line/push"; // ตัวอย่าง
+
+    // (ทางเลือก) ถ้าจะใช้ LIFF เพื่อดึง userId อัตโนมัติ ให้ใส่ LIFF_ID และเอา block LIFF ด้านล่างออกจากคอมเมนต์
+    // const USE_LIFF = false;
+    // const LIFF_ID  = "YOUR_LIFF_ID";
+    const id = "2008716446-QzCHty1r"; // -- log in extract slip
+    // =======================
+    // ตัวช่วย UI
+    // =======================
+    const $ = (s) => document.querySelector(s);
+    const slipFile = $("#slipFile");
+    const preview = $("#preview");
+    const lineText = $("#lineText");
+    const lineUserId = $("#lineUserId");
+    const btnUpload = $("#btnUpload");
+    const btnSendLine = $("#btnSendLine");
+    const btnReset = $("#btnReset");
+    const apiResult = $("#apiResult");
+    const statusArea = $("#statusArea");
+    const progressWrap = $("#progressWrap");
+    const progressBar = $("#progressBar");
+
+    main();
+
+    async function main() {
+            liff.init({ liffId: id }, function () {
+                liff.ready.then(async () => {
+                    // LIFF is ready
+                    console.log('LIFF Started');
+
+                    if (!liff.isLoggedIn()) {
+
+                        liff.login();
+                    }
+
+                    var profile = await liff.getProfile();
+                    const accessToken = await liff.getAccessToken();
+                    const idToken = await liff.getIDToken();
+
+                    console.log(profile);
+                    console.log("Access Token : " + accessToken);
+                    console.log("ID Token : " + idToken);
+
+                    var name = profile.displayName;
+
+                    console.log("Profile Name : " + profile.displayName);
+                    console.log("User ID : " + profile.userId);
+
+                    profileName = profile.displayName;
+                    userIdLine = profile.userId;
+
+                }).catch((err) => {
+                    console.error('LIFF initialization failed ', err);
+                });
+            });
+        }
+
+    // function setStatus(msg, isErr = false) {
+    //   statusArea.textContent = msg;
+    //   statusArea.classList.toggle("text-danger", isErr);
+    //   statusArea.classList.toggle("text-secondary", !isErr);
+    // }
+
+    // function setProgress(percent) {
+    //   progressWrap.classList.remove("d-none");
+    //   progressBar.style.width = `${percent}%`;
+    //   if (percent >= 100) {
+    //     setTimeout(() => progressWrap.classList.add("d-none"), 800);
+    //   }
+    // }
+
+    // function resetAll() {
+    //   $("#uploadForm").reset();
+    //   preview.src = "";
+    //   preview.classList.add("d-none");
+    //   apiResult.textContent = "";
+    //   lineText.value = "";
+    //   btnSendLine.disabled = true;
+    //   setProgress(0);
+    //   progressWrap.classList.add("d-none");
+    //   setStatus("พร้อมทำงาน");
+    // }
+
+    // แสดงตัวอย่างรูป
+    slipFile.addEventListener("change", (e) => {
+      const f = e.target.files?.[0];
+      if (!f) { preview.classList.add("d-none"); return; }
+      const url = URL.createObjectURL(f);
+      preview.src = url;
+      preview.onload = () => URL.revokeObjectURL(url);
+      preview.classList.remove("d-none");
+    });
+
+    // // อัปโหลดไป .NET API
+    // btnUpload.addEventListener("click", async () => {
+    //   const f = slipFile.files?.[0];
+    //   if (!f) {
+    //     setStatus("กรุณาเลือกไฟล์ก่อนอัปโหลด", true);
+    //     slipFile.focus();
+    //     return;
+    //   }
+    //   setStatus("กำลังอัปโหลดไปยัง .NET API ...");
+    //   setProgress(15);
+    //   btnUpload.disabled = true;
+
+    //   try {
+    //     const fd = new FormData();
+    //     fd.append("file", f); // ชื่อ key ฝั่ง .NET ต้องรองรับ
+
+    //     // tip: ถ้าต้องการส่งพารามิเตอร์เพิ่ม
+    //     // fd.append("someParam", "value");
+
+    //     const resp = await fetch(API_UPLOAD_URL, {
+    //       method: "POST",
+    //       body: fd
+    //     });
+
+    //     setProgress(60);
+
+    //     // รองรับทั้ง text และ json
+    //     let text;
+    //     let json;
+    //     const contentType = resp.headers.get("content-type") || "";
+    //     if (contentType.includes("application/json")) {
+    //       json = await resp.json();
+    //       text = JSON.stringify(json, null, 2);
+    //     } else {
+    //       text = await resp.text();
+    //     }
+
+    //     apiResult.textContent = text;
+    //     setProgress(90);
+
+    //     // สกัดข้อความสำหรับส่ง LINE (คุณปรับได้ตาม response ของคุณ)
+    //     let summary = "";
+    //     if (json) {
+    //       // โครงแบบ ResultData { result:any, status:int, message:string }
+    //       if (typeof json.message === "string" && json.message.trim() !== "") {
+    //         summary = json.message;
+    //       } else if (json.result && typeof json.result === "string") {
+    //         summary = json.result;
+    //       } else {
+    //         summary = "ผลลัพธ์จากระบบ:\n" + JSON.stringify(json, null, 2);
+    //       }
+    //     } else {
+    //       summary = text || "อัปโหลดสำเร็จ (ไม่มีข้อความเพิ่มเติม)";
+    //     }
+    //     lineText.value = summary;
+    //     btnSendLine.disabled = false;
+
+    //     setProgress(100);
+    //     setStatus("อัปโหลดสำเร็จ พร้อมส่ง LINE");
+    //   } catch (err) {
+    //     console.error(err);
+    //     setStatus("อัปโหลดล้มเหลว: " + (err?.message || err), true);
+    //   } finally {
+    //     btnUpload.disabled = false;
+    //   }
+    // });
+
+    // ส่งข้อความไป LINE (ผ่าน backend proxy)
+    // btnSendLine.addEventListener("click", async () => {
+    //   const userId = lineUserId.value.trim();
+    //   const message = lineText.value.trim();
+
+    //   if (!userId) { setStatus("กรุณาใส่ LINE userId (หรือให้ LIFF เติมให้อัตโนมัติ)", true); lineUserId.focus(); return; }
+    //   if (!message) { setStatus("ยังไม่มีข้อความที่จะส่ง LINE", true); lineText.focus(); return; }
+
+    //   setStatus("กำลังส่งข้อความไป LINE (ผ่าน backend)...");
+    //   btnSendLine.disabled = true;
+
+    //   try {
+    //     const resp = await fetch(LINE_PUSH_URL, {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({ to: userId, message })
+    //     });
+
+    //     const txt = await resp.text();
+    //     apiResult.textContent = `LINE push response:\n${txt}`;
+    //     setStatus(resp.ok ? "ส่ง LINE สำเร็จ" : "ส่ง LINE ไม่สำเร็จ", !resp.ok);
+    //   } catch (err) {
+    //     console.error(err);
+    //     setStatus("ส่ง LINE ล้มเหลว: " + (err?.message || err), true);
+    //   } finally {
+    //     btnSendLine.disabled = false;
+    //   }
+    // });
+
+    // รีเซ็ต
+    //btnReset.addEventListener("click", resetAll);
+
+    // =======================
+    // (ทางเลือก) ผูก LIFF เพื่อรู้ userId อัตโนมัติ
+    // =======================
+    // 1) เปิด USE_LIFF = true และใส่ LIFF_ID
+    // 2) หน้าเว็บต้องถูกรันใน LIFF context
+
+    // if (USE_LIFF && typeof liff === "undefined") {
+    //   // โหลด LIFF SDK อัตโนมัติถ้าจำเป็น
+    //   const s = document.createElement("script");
+    //   s.src = "https://static.line-scdn.net/liff/edge/2/sdk.js";
+    //   s.onload = initLiff;
+    //   document.body.appendChild(s);
+    //   $("#liffBox").classList.remove("d-none");
+    // } else if (USE_LIFF) {
+    //   initLiff();
+    // }
+
+    // async function initLiff() {
+    //   try {
+    //     await liff.init({ liffId: LIFF_ID });
+    //     if (!liff.isLoggedIn()) liff.login();
+    //     const profile = await liff.getProfile();
+    //     lineUserId.value = profile.userId || "";
+    //     $("#liffBox").classList.add("d-none");
+    //   } catch (e) {
+    //     $("#liffBox").classList.remove("d-none");
+    //     $("#liffBox").classList.replace("alert-info", "alert-warning");
+    //     $("#liffBox").innerHTML = "<strong>LIFF ไม่พร้อมใช้งาน:</strong> " + (e?.message || e);
+    //   }
+    // }
+  </script>
+</body>
+</html>
