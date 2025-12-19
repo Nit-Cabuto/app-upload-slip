@@ -12,6 +12,7 @@
     .card { border: none; border-radius: 1rem; box-shadow: 0 8px 30px rgba(0,0,0,.06); }
     .preview-img { max-height: 240px; object-fit: contain; border: 1px dashed #dee2e6; border-radius: .75rem; background: #fff; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .error { background-color: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
@@ -211,7 +212,7 @@
         if (!f) {
             //alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
             statusDiv.textContent = 'กรุณาเลือกไฟล์ก่อนอัปโหลด';
-            //statusDiv.className = 'error';
+            statusDiv.className = 'error';
             slipFile.focus();
             return;
         }
