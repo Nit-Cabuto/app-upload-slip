@@ -56,11 +56,13 @@
               </div> -->
             </div>
 
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <div class="progress d-none" id="progressWrap" style="height: 10px;">
                 <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%"></div>
               </div>
-            </div>
+            </div> -->
+            
+            <div id="status"></div>
 
             <div class="d-grid gap-2"> 
             <!-- <div class="d-flex gap-2"> -->
@@ -204,8 +206,12 @@
 
     btnUpload.addEventListener("click", async () => {
         const f = slipFile.files?.[0];
+        const statusDiv = document.getElementById('status');
+        
         if (!f) {
-            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+            //alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+            statusDiv.textContent = 'กรุณาเลือกไฟล์ก่อนอัปโหลด';
+            //statusDiv.className = 'error';
             slipFile.focus();
             return;
         }
