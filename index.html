@@ -240,7 +240,7 @@
             console.log(resp);
 
             if(resp.status !== 200){
-                statusDiv.textContent = 'เกิดข้อผิดพลาดในการอัปโหลด';
+                statusDiv.textContent = 'สลิปนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
                 statusDiv.className = 'error';
 
                 return;
@@ -278,7 +278,7 @@
             }
             else
             {
-                statusDiv.textContent = 'สลิปนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+                statusDiv.textContent = 'สลิปนี้มีข้อผิดพลาดเกิดขึ้น กรุณาติดต่อ IT Support';
                 statusDiv.className = 'error';
 
                 return;
