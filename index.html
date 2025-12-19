@@ -119,7 +119,9 @@
     // const USE_LIFF = false;
     // const LIFF_ID  = "YOUR_LIFF_ID";
     const id = "2008716446-QzCHty1r"; // -- log in extract slip
-    const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb"
+    const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
+    const profileName = null;
+    const userIdLine = null;
     // =======================
     // ตัวช่วย UI
     // =======================
@@ -242,7 +244,6 @@
                 statusDiv.className = 'error';
 
                 return;
-                //setTimeout(() => { liff.closeWindow(); }, 500);
             }
 
             const result = await resp.json();
@@ -253,17 +254,40 @@
                 statusDiv.textContent = 'QR Code ไม่ถูกต้อง';
                 statusDiv.className = 'error';
 
-                return;
-                //setTimeout(() => { liff.closeWindow(); }, 500);                
+                return;            
             }
 
             const rec = result.data.receiver.account.name.th
             console.log("receiver : " + rec);
 
-            $("#uploadForm").reset();
-            preview.classList.add("d-none");
-            statusDiv.textContent = 'อัปโหลดสำเร็จ';
-            statusDiv.className = 'success';
+            if(rec !== undefined || rec !== null || rec !== '')
+            {
+                if(rec.includes("KERRY"))
+                {
+                    const dataJson = { data: result, profileName: profileName, userIdLine: userIdLine };
+
+                    console.log(dataJson);
+                }
+                else
+                {
+                    statusDiv.textContent = 'สลิปนี้ไม่ใช่ของ KERRY กรุณาตรวจสอบอีกครั้ง';
+                    statusDiv.className = 'error';
+
+                    return;
+                }
+            }
+            else
+            {
+                statusDiv.textContent = 'สลิปนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+                statusDiv.className = 'error';
+
+                return;
+            }
+
+            // $("#uploadForm").reset();
+            // preview.classList.add("d-none");
+            // statusDiv.textContent = 'อัปโหลดสำเร็จ';
+            // statusDiv.className = 'success';
 
         } catch (err) {
             console.error(err);
