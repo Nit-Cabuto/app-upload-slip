@@ -240,9 +240,16 @@
 
             console.log(resp);
 
-            if(resp.status !== 200){
+            if (resp.status !== 200) {
                 statusDiv.textContent = 'สลิปนี้ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
                 statusDiv.className = 'error';
+
+                await liff.sendMessages([
+                    {
+                        type: "text",
+                        text: statusDiv.textContent,
+                    }
+                ]);
 
                 return;
             }
@@ -250,37 +257,55 @@
             const result = await resp.json();
             console.log(result);
 
-            if(result.status !== 200)
-            {
+            if (result.status !== 200) {
                 statusDiv.textContent = 'QR Code ไม่ถูกต้อง';
                 statusDiv.className = 'error';
 
-                return;            
+                await liff.sendMessages([
+                    {
+                        type: "text",
+                        text: statusDiv.textContent,
+                    }
+                ]);
+
+                return;
             }
 
             const rec = result.data.receiver.account.name.th
             console.log("receiver : " + rec);
 
-            if(rec !== undefined || rec !== null || rec !== '')
-            {
-                if(rec.includes("KERRY"))
-                {
+            if (rec !== undefined || rec !== null || rec !== '') {
+                if (rec.includes("KERRY")) {
                     const dataJson = { data: result, profileName: profileName, userIdLine: userIdLine };
 
                     console.log(dataJson);
+
+
                 }
-                else
-                {
+                else {
                     statusDiv.textContent = 'สลิปนี้ไม่ใช่ของ KERRY กรุณาตรวจสอบอีกครั้ง';
                     statusDiv.className = 'error';
+
+                    await liff.sendMessages([
+                        {
+                            type: "text",
+                            text: statusDiv.textContent,
+                        }
+                    ]);
 
                     return;
                 }
             }
-            else
-            {
+            else {
                 statusDiv.textContent = 'สลิปนี้มีข้อผิดพลาดเกิดขึ้น กรุณาติดต่อ IT Support';
                 statusDiv.className = 'error';
+
+                await liff.sendMessages([
+                    {
+                        type: "text",
+                        text: statusDiv.textContent,
+                    }
+                ]);
 
                 return;
             }
@@ -291,6 +316,7 @@
             // statusDiv.className = 'success';
 
         } catch (err) {
+
             console.error(err);
 
             statusDiv.textContent = 'อัปโหลดล้มเหลว: ' + (err?.message || err);
