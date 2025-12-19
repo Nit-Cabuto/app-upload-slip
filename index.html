@@ -218,7 +218,10 @@
         }
 
         btnUpload.disabled = true;
-        preview.classList.add("d-none"); return; 
+        $("#uploadForm").reset();
+        preview.classList.add("d-none");
+         
+        return; 
     });
 
     // // อัปโหลดไป .NET API
