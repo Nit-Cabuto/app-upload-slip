@@ -13,6 +13,7 @@
     .preview-img { max-height: 240px; object-fit: contain; border: 1px dashed #dee2e6; border-radius: .75rem; background: #fff; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
     .error { background-color: #f8d7da; color: #721c24; }
+    .success { background-color: #d4edda; color: #155724; }
   </style>
 </head>
 <body>
@@ -234,11 +235,33 @@
                 body: formData
             });
 
-            const json = await resp.json();
-            console.log(json);
+            console.log(resp);
 
+            if(resp.status !== 200){
+                statusDiv.textContent = 'เกิดข้อผิดพลาดในการอัปโหลด';
+                statusDiv.className = 'error';
+
+                setTimeout(() => { liff.closeWindow(); }, 500);
+            }
+
+            const result = await resp.json();
+            console.log(result);
+
+            if(result.status !== 200)
+            {
+                statusDiv.textContent = 'QR Code ไม่ถูกต้อง';
+                statusDiv.className = 'error';
+
+                setTimeout(() => { liff.closeWindow(); }, 500);                
+            }
+
+            const rec = result.receiver.account.name.th
+            console.log("receiver : " + rec);
+
+            $("#uploadForm").reset();
+            preview.classList.add("d-none");
             statusDiv.textContent = 'อัปโหลดสำเร็จ';
-            statusDiv.className = '';
+            statusDiv.className = 'success';
 
         } catch (err) {
             console.error(err);
@@ -246,7 +269,7 @@
             statusDiv.className = 'error';
         }
 
-        
+        setTimeout(() => { liff.closeWindow(); }, 500);
     });
 
     // // อัปโหลดไป .NET API
