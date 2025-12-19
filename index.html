@@ -241,7 +241,8 @@
                 statusDiv.textContent = 'เกิดข้อผิดพลาดในการอัปโหลด';
                 statusDiv.className = 'error';
 
-                setTimeout(() => { liff.closeWindow(); }, 500);
+                return;
+                //setTimeout(() => { liff.closeWindow(); }, 500);
             }
 
             const result = await resp.json();
@@ -252,7 +253,8 @@
                 statusDiv.textContent = 'QR Code ไม่ถูกต้อง';
                 statusDiv.className = 'error';
 
-                setTimeout(() => { liff.closeWindow(); }, 500);                
+                return;
+                //setTimeout(() => { liff.closeWindow(); }, 500);                
             }
 
             const rec = result.data.receiver.account.name.th
@@ -268,8 +270,10 @@
             statusDiv.textContent = 'อัปโหลดล้มเหลว: ' + (err?.message || err);
             statusDiv.className = 'error';
         }
+        finally {
 
-        setTimeout(() => { liff.closeWindow(); }, 500);
+            setTimeout(() => { liff.closeWindow(); }, 500);
+        }
     });
 
     // // อัปโหลดไป .NET API
