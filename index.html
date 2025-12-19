@@ -202,6 +202,18 @@
       preview.classList.remove("d-none");
     });
 
+    btnUpload.addEventListener("click", async () => {
+        const f = slipFile.files?.[0];
+        if (!f) {
+            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+            slipFile.focus();
+            return;
+        }
+
+        btnUpload.disabled = true;
+        preview.classList.add("d-none"); return; 
+    });
+
     // // อัปโหลดไป .NET API
     // btnUpload.addEventListener("click", async () => {
     //   const f = slipFile.files?.[0];
