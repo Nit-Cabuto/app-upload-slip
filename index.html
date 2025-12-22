@@ -354,16 +354,21 @@
             $("#uploadForm").reset();
             preview.classList.add("d-none");
 
-            logOut();
+            await logOut();
 
             setTimeout(() => { liff.closeWindow(); }, 500);
         }
     });
 
-    // async function logOut() {
-    //     liff.logout();
-    //     window.location.reload();
-    // }
+    clearQueryString();
+
+    async function logOut() {
+
+        console.log('logOut');
+        
+        liff.logout();
+        //window.location.reload();
+    }
 
     async function clearQueryString() {
 
