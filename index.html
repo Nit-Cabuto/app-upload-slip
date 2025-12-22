@@ -366,6 +366,9 @@
     // }
 
     async function clearQueryString() {
+
+      console.log('clearQueryString');
+
       if (window.location.search || window.location.hash) {
         window.history.replaceState({}, document.title, window.location.pathname);
       }
