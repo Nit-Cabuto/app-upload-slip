@@ -153,6 +153,7 @@
                 liff.ready.then(async () => {
                     // LIFF is ready
                     console.log('LIFF Started');
+
                     const cleanUrl = window.location.origin + window.location.pathname;
                     console.log('Clean URL: ' + cleanUrl);
 
@@ -270,11 +271,10 @@
             const formData = new FormData();
             formData.append("file", f);
 
-            const resp = await fetch(`https://developer.easyslip.com/api/v1/verify`, {
+            const resp = await fetch('https://developer.easyslip.com/api/v1/verify', {
                 method: "POST",
                 headers: {
-                    'Authorization': `Bearer ${tokehslip}`
-                },
+                    'Authorization': 'Bearer ${tokehslip}'                },
                 body: formData
             });
 
