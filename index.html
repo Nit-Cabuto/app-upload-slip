@@ -156,6 +156,14 @@
                     const cleanUrl = window.location.origin + window.location.pathname;
                     console.log('Clean URL: ' + cleanUrl);
 
+                    if (liff.isInClient())
+                    {                        
+                      console.log('LIFF in LINE Client');
+                    }
+                    else {
+                      console.log('LIFF not in LINE Client');
+                    }
+
                     if (!liff.isLoggedIn()) {
 
                         liff.login({ redirectUri: "https://nit-cabuto.github.io/app-upload-slip/" });
@@ -163,23 +171,39 @@
                     else {
                         console.log('LIFF already logged in');
                         //location.replace(cleanUrl);
+
+                      var profile = await liff.getProfile();
+                      const accessToken = await liff.getAccessToken();
+                      const idToken = await liff.getIDToken();
+
+                      console.log(profile);
+                      console.log("Access Token : " + accessToken);
+                      console.log("ID Token : " + idToken);
+
+                      var name = profile.displayName;
+
+                      console.log("Profile Name : " + profile.displayName);
+                      console.log("User ID : " + profile.userId);
+
+                      profileName = profile.displayName;
+                      userIdLine = profile.userId;
                     }
 
-                    var profile = await liff.getProfile();
-                    const accessToken = await liff.getAccessToken();
-                    const idToken = await liff.getIDToken();
+                    // var profile = await liff.getProfile();
+                    // const accessToken = await liff.getAccessToken();
+                    // const idToken = await liff.getIDToken();
 
-                    console.log(profile);
-                    console.log("Access Token : " + accessToken);
-                    console.log("ID Token : " + idToken);
+                    // console.log(profile);
+                    // console.log("Access Token : " + accessToken);
+                    // console.log("ID Token : " + idToken);
 
-                    var name = profile.displayName;
+                    // var name = profile.displayName;
 
-                    console.log("Profile Name : " + profile.displayName);
-                    console.log("User ID : " + profile.userId);
+                    // console.log("Profile Name : " + profile.displayName);
+                    // console.log("User ID : " + profile.userId);
 
-                    profileName = profile.displayName;
-                    userIdLine = profile.userId;
+                    // profileName = profile.displayName;
+                    // userIdLine = profile.userId;
 
                 }).catch((err) => {
                     console.error('LIFF initialization failed ', err);
