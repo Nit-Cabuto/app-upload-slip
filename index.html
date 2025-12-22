@@ -145,7 +145,7 @@
     const progressWrap = $("#progressWrap");
     const progressBar = $("#progressBar");
 
-    main();
+    await main();
 
     async function main() {
             liff.init({ liffId: id }, function () {
@@ -360,7 +360,7 @@
         }
     });
 
-    clearQueryString();
+    await clearQueryString();
 
     async function logOut() {
 
