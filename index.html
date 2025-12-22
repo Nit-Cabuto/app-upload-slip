@@ -354,9 +354,16 @@
             $("#uploadForm").reset();
             preview.classList.add("d-none");
 
+            logOut();
+
             setTimeout(() => { liff.closeWindow(); }, 500);
         }
     });
+
+    async function logOut() {
+        liff.logout();
+        window.location.reload();
+    }
 
     // // อัปโหลดไป .NET API
     // btnUpload.addEventListener("click", async () => {
@@ -487,6 +494,7 @@
     //     $("#liffBox").innerHTML = "<strong>LIFF ไม่พร้อมใช้งาน:</strong> " + (e?.message || e);
     //   }
     // }
+
   </script>
 </body>
 </html>
