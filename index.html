@@ -179,7 +179,7 @@
                 });
             });
 
-            await clearQueryString();            
+            //await clearQueryString();            
         }
 
     // function setStatus(msg, isErr = false) {
@@ -360,10 +360,10 @@
         }
     });
 
-    async function logOut() {
-        liff.logout();
-        window.location.reload();
-    }
+    // async function logOut() {
+    //     liff.logout();
+    //     window.location.reload();
+    // }
 
     async function clearQueryString() {
       if (window.location.search || window.location.hash) {
