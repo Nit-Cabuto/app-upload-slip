@@ -180,6 +180,8 @@
 
 
             });
+
+            await clearQueryString();            
         }
 
     // function setStatus(msg, isErr = false) {
@@ -364,6 +366,13 @@
         liff.logout();
         window.location.reload();
     }
+
+    async function clearQueryString() {
+      if (window.location.search || window.location.hash) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
 
     // // อัปโหลดไป .NET API
     // btnUpload.addEventListener("click", async () => {
