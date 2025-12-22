@@ -48,12 +48,14 @@
 
                     console.log('User profile:', profile);
 
-                    window.location.replace(`https://nit-cabuto.github.io/app-upload-slip/verify.html`);
+                    window.location.replace(`verify.html`);
                 }
             } else {
                 console.log('LIFF not in LINE Client');
 
-                liff.logout();
+                window.location.replace(`verify.html`);
+
+                //liff.logout();
 
                 console.log('User logged out');
 
