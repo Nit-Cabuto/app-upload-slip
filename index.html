@@ -150,8 +150,10 @@
 
     async function main() {
             liff.init({ liffId: id }, function () {
+
+                // LIFF is ready
                 liff.ready.then(async () => {
-                    // LIFF is ready
+                    
                     console.log('LIFF Started');
 
                     const cleanUrl = window.location.origin + window.location.pathname;
@@ -164,6 +166,9 @@
                     }
                     else {
                       console.log('LIFF not in LINE Client');
+
+                      return;
+
                     }
                       
                     // -- check login --
@@ -191,23 +196,6 @@
                       profileName = profile.displayName;
                       userIdLine = profile.userId;
                     }
-
-                    // var profile = await liff.getProfile();
-                    // const accessToken = await liff.getAccessToken();
-                    // const idToken = await liff.getIDToken();
-
-                    // console.log(profile);
-                    // console.log("Access Token : " + accessToken);
-                    // console.log("ID Token : " + idToken);
-
-                    // var name = profile.displayName;
-
-                    // console.log("Profile Name : " + profile.displayName);
-                    // console.log("User ID : " + profile.userId);
-
-                    // profileName = profile.displayName;
-                    // userIdLine = profile.userId;
-
                 }).catch((err) => {
                     console.error('LIFF initialization failed ', err);
                 });
