@@ -42,10 +42,13 @@
 
                 if (!liff.isLoggedIn()) {
                     liff.login();
+
                 } else {
                     const profile = await liff.getProfile();
 
                     console.log('User profile:', profile);
+
+                    window.location.href = `https://nit-cabuto.github.io/app-upload-slip/`;
 
                     //window.location.href = `slip.html?userId=${profile.userId}&token=${tokehslip}`;
                 }
@@ -53,6 +56,8 @@
                 console.log('LIFF not in LINE Client');
 
                 liff.logout();
+
+                console.log('User logged out');
 
                 return;
             }
