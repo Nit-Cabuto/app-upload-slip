@@ -38,10 +38,14 @@
             await liff.init({ liffId: id });
 
             if (liff.isInClient()) {
+
                 console.log('LIFF in LINE Client');
 
                 if (!liff.isLoggedIn()) {
-                    liff.login();
+
+                    liff.login({
+                        redirectUri: "verify.html"
+                    });
 
                 } else {
                     const profile = await liff.getProfile();
@@ -55,7 +59,7 @@
 
                 window.location.replace(`verify.html`);
 
-                //liff.logout();
+                liff.logout();
 
                 console.log('User logged out');
 
