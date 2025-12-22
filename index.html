@@ -274,7 +274,8 @@
             const resp = await fetch('https://developer.easyslip.com/api/v1/verify', {
                 method: "POST",
                 headers: {
-                    'Authorization': 'Bearer ${tokehslip}'                },
+                    'Authorization': `Bearer ${tokehslip}`
+                  },
                 body: formData
             });
 
