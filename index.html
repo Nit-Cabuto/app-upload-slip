@@ -155,9 +155,10 @@
                     console.log('LIFF Started');
                     const cleanUrl = window.location.origin + window.location.pathname;
                     console.log('Clean URL: ' + cleanUrl);
+
                     if (!liff.isLoggedIn()) {
 
-                        liff.login();
+                        liff.login({ redirectUri: "https://nit-cabuto.github.io/app-upload-slip/" });
                     }
                     else {
                         console.log('LIFF already logged in');
