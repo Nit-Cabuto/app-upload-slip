@@ -131,9 +131,59 @@
 
       console.log('check mainliff');
 
-      let liffData = sessionStorage.getItem("liffId");
+      const liffData = sessionStorage.getItem("liffId");
 
       console.log("LIFF ID from sessionStorage: " + liffData);
+
+      liff.init({ liffId: liffData }, function () {
+
+                // LIFF is ready
+                liff.ready.then(async () => {
+                    
+                    console.log('LIFF Started');
+
+                    // เช็คว่าเปิดใน LINE หรือไม่
+                    if (liff.isInClient())
+                    {                        
+                      console.log('LIFF in LINE Client');
+                    }
+                    else {
+                      console.log('LIFF not in LINE Client');
+
+                      liff.logout();
+
+                      return;
+                    }
+                      
+                    // -- check login --
+                    if (!liff.isLoggedIn()) {
+                        liff.login();
+                    }
+                    else {
+                        
+                        console.log('LIFF already logged in');
+                        //location.replace(cleanUrl);
+
+                      var profile = await liff.getProfile();
+                      const accessToken = await liff.getAccessToken();
+                      const idToken = await liff.getIDToken();
+
+                      console.log(profile);
+                      console.log("Access Token : " + accessToken);
+                      console.log("ID Token : " + idToken);
+
+                      var name = profile.displayName;
+
+                      console.log("Profile Name : " + profile.displayName);
+                      console.log("User ID : " + profile.userId);
+
+                      profileName = profile.displayName;
+                      userIdLine = profile.userId;
+                    }
+                }).catch((err) => {
+                    console.error('LIFF initialization failed ', err);
+                });
+            });
 
       // await liff.init({ liffId: liffData });
 
@@ -176,94 +226,6 @@
     const statusArea = $("#statusArea");
     const progressWrap = $("#progressWrap");
     const progressBar = $("#progressBar");
-
-    //window.location.replace("https://nit-cabuto.github.io/app-upload-slip/main.html");    
-
-    //main();
-
-    async function main() {
-            liff.init({ liffId: id }, function () {
-
-                // LIFF is ready
-                liff.ready.then(async () => {
-                    
-                    console.log('LIFF Started');
-
-                    const cleanUrl = window.location.origin + window.location.pathname;
-                    console.log('Clean URL: ' + cleanUrl);
-
-                    // เช็คว่าเปิดใน LINE หรือไม่
-                    if (liff.isInClient())
-                    {                        
-                      console.log('LIFF in LINE Client');
-                    }
-                    else {
-                      console.log('LIFF not in LINE Client');
-
-                      liff.logout();
-
-                      return;
-
-                    }
-                      
-                    // -- check login --
-                    if (!liff.isLoggedIn()) {
-
-                        liff.login({ redirectUri: "https://nit-cabuto.github.io/app-upload-slip/" });
-                    }
-                    else {
-                        console.log('LIFF already logged in');
-                        //location.replace(cleanUrl);
-
-                      var profile = await liff.getProfile();
-                      const accessToken = await liff.getAccessToken();
-                      const idToken = await liff.getIDToken();
-
-                      console.log(profile);
-                      console.log("Access Token : " + accessToken);
-                      console.log("ID Token : " + idToken);
-
-                      var name = profile.displayName;
-
-                      console.log("Profile Name : " + profile.displayName);
-                      console.log("User ID : " + profile.userId);
-
-                      profileName = profile.displayName;
-                      userIdLine = profile.userId;
-                    }
-                }).catch((err) => {
-                    console.error('LIFF initialization failed ', err);
-                });
-            });
-
-            //await clearQueryString();            
-        }
-
-    // function setStatus(msg, isErr = false) {
-    //   statusArea.textContent = msg;
-    //   statusArea.classList.toggle("text-danger", isErr);
-    //   statusArea.classList.toggle("text-secondary", !isErr);
-    // }
-
-    // function setProgress(percent) {
-    //   progressWrap.classList.remove("d-none");
-    //   progressBar.style.width = `${percent}%`;
-    //   if (percent >= 100) {
-    //     setTimeout(() => progressWrap.classList.add("d-none"), 800);
-    //   }
-    // }
-
-    // function resetAll() {
-    //   $("#uploadForm").reset();
-    //   preview.src = "";
-    //   preview.classList.add("d-none");
-    //   apiResult.textContent = "";
-    //   lineText.value = "";
-    //   btnSendLine.disabled = true;
-    //   setProgress(0);
-    //   progressWrap.classList.add("d-none");
-    //   setStatus("พร้อมทำงาน");
-    // }
 
     //------------------------------
 
@@ -396,11 +358,6 @@
                 return;
             }
 
-            // $("#uploadForm").reset();
-            // preview.classList.add("d-none");
-            // statusDiv.textContent = 'อัปโหลดสำเร็จ';
-            // statusDiv.className = 'success';
-
         } catch (err) {
 
             console.error(err);
@@ -418,156 +375,6 @@
             setTimeout(() => { liff.closeWindow(); }, 500);
         }
     });
-
-    //clearQueryString();
-
-    async function logOut() {
-
-        console.log('logOut');
-        
-        liff.logout();
-        //window.location.reload();
-    }
-
-    // async function clearQueryString() {
-
-    //   console.log('clearQueryString');
-
-    //   if (window.location.search || window.location.hash) {
-    //     window.history.replaceState({}, document.title, window.location.pathname);
-    //   }
-    // }
-
-
-    // // อัปโหลดไป .NET API
-    // btnUpload.addEventListener("click", async () => {
-    //   const f = slipFile.files?.[0];
-    //   if (!f) {
-    //     setStatus("กรุณาเลือกไฟล์ก่อนอัปโหลด", true);
-    //     slipFile.focus();
-    //     return;
-    //   }
-    //   setStatus("กำลังอัปโหลดไปยัง .NET API ...");
-    //   setProgress(15);
-    //   btnUpload.disabled = true;
-
-    //   try {
-    //     const fd = new FormData();
-    //     fd.append("file", f); // ชื่อ key ฝั่ง .NET ต้องรองรับ
-
-    //     // tip: ถ้าต้องการส่งพารามิเตอร์เพิ่ม
-    //     // fd.append("someParam", "value");
-
-    //     const resp = await fetch(API_UPLOAD_URL, {
-    //       method: "POST",
-    //       body: fd
-    //     });
-
-    //     setProgress(60);
-
-    //     // รองรับทั้ง text และ json
-    //     let text;
-    //     let json;
-    //     const contentType = resp.headers.get("content-type") || "";
-    //     if (contentType.includes("application/json")) {
-    //       json = await resp.json();
-    //       text = JSON.stringify(json, null, 2);
-    //     } else {
-    //       text = await resp.text();
-    //     }
-
-    //     apiResult.textContent = text;
-    //     setProgress(90);
-
-    //     // สกัดข้อความสำหรับส่ง LINE (คุณปรับได้ตาม response ของคุณ)
-    //     let summary = "";
-    //     if (json) {
-    //       // โครงแบบ ResultData { result:any, status:int, message:string }
-    //       if (typeof json.message === "string" && json.message.trim() !== "") {
-    //         summary = json.message;
-    //       } else if (json.result && typeof json.result === "string") {
-    //         summary = json.result;
-    //       } else {
-    //         summary = "ผลลัพธ์จากระบบ:\n" + JSON.stringify(json, null, 2);
-    //       }
-    //     } else {
-    //       summary = text || "อัปโหลดสำเร็จ (ไม่มีข้อความเพิ่มเติม)";
-    //     }
-    //     lineText.value = summary;
-    //     btnSendLine.disabled = false;
-
-    //     setProgress(100);
-    //     setStatus("อัปโหลดสำเร็จ พร้อมส่ง LINE");
-    //   } catch (err) {
-    //     console.error(err);
-    //     setStatus("อัปโหลดล้มเหลว: " + (err?.message || err), true);
-    //   } finally {
-    //     btnUpload.disabled = false;
-    //   }
-    // });
-
-    // ส่งข้อความไป LINE (ผ่าน backend proxy)
-    // btnSendLine.addEventListener("click", async () => {
-    //   const userId = lineUserId.value.trim();
-    //   const message = lineText.value.trim();
-
-    //   if (!userId) { setStatus("กรุณาใส่ LINE userId (หรือให้ LIFF เติมให้อัตโนมัติ)", true); lineUserId.focus(); return; }
-    //   if (!message) { setStatus("ยังไม่มีข้อความที่จะส่ง LINE", true); lineText.focus(); return; }
-
-    //   setStatus("กำลังส่งข้อความไป LINE (ผ่าน backend)...");
-    //   btnSendLine.disabled = true;
-
-    //   try {
-    //     const resp = await fetch(LINE_PUSH_URL, {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({ to: userId, message })
-    //     });
-
-    //     const txt = await resp.text();
-    //     apiResult.textContent = `LINE push response:\n${txt}`;
-    //     setStatus(resp.ok ? "ส่ง LINE สำเร็จ" : "ส่ง LINE ไม่สำเร็จ", !resp.ok);
-    //   } catch (err) {
-    //     console.error(err);
-    //     setStatus("ส่ง LINE ล้มเหลว: " + (err?.message || err), true);
-    //   } finally {
-    //     btnSendLine.disabled = false;
-    //   }
-    // });
-
-    // รีเซ็ต
-    //btnReset.addEventListener("click", resetAll);
-
-    // =======================
-    // (ทางเลือก) ผูก LIFF เพื่อรู้ userId อัตโนมัติ
-    // =======================
-    // 1) เปิด USE_LIFF = true และใส่ LIFF_ID
-    // 2) หน้าเว็บต้องถูกรันใน LIFF context
-
-    // if (USE_LIFF && typeof liff === "undefined") {
-    //   // โหลด LIFF SDK อัตโนมัติถ้าจำเป็น
-    //   const s = document.createElement("script");
-    //   s.src = "https://static.line-scdn.net/liff/edge/2/sdk.js";
-    //   s.onload = initLiff;
-    //   document.body.appendChild(s);
-    //   $("#liffBox").classList.remove("d-none");
-    // } else if (USE_LIFF) {
-    //   initLiff();
-    // }
-
-    // async function initLiff() {
-    //   try {
-    //     await liff.init({ liffId: LIFF_ID });
-    //     if (!liff.isLoggedIn()) liff.login();
-    //     const profile = await liff.getProfile();
-    //     lineUserId.value = profile.userId || "";
-    //     $("#liffBox").classList.add("d-none");
-    //   } catch (e) {
-    //     $("#liffBox").classList.remove("d-none");
-    //     $("#liffBox").classList.replace("alert-info", "alert-warning");
-    //     $("#liffBox").innerHTML = "<strong>LIFF ไม่พร้อมใช้งาน:</strong> " + (e?.message || e);
-    //   }
-    // }
 
   </script>
 </body>
