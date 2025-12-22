@@ -33,38 +33,80 @@
 
         main();
 
+        // async function main() {
+
+        //     await liff.init({ liffId: id });
+
+        //     if (liff.isInClient()) {
+
+        //         console.log('LIFF in LINE Client');
+
+        //         if (!liff.isLoggedIn()) {
+
+        //             liff.login({
+        //                 redirectUri: "verify.html"
+        //             });
+
+        //         } else {
+        //             const profile = await liff.getProfile();
+
+        //             console.log('User profile:', profile);
+
+        //             window.location.replace(`verify.html`);
+        //         }
+        //     } else {
+        //         console.log('LIFF not in LINE Client');
+
+        //         window.location.replace(`verify.html`);
+
+        //         liff.logout();
+
+        //         console.log('User logged out');
+
+        //         return;
+        //     }
+        // }
+
         async function main() {
 
-            await liff.init({ liffId: id });
+            await liff.init({ liffId: id }, function () {
 
-            if (liff.isInClient()) {
+                liff.ready.then(async () => {
 
-                console.log('LIFF in LINE Client');
+                    console.log('LIFF Started');
 
-                if (!liff.isLoggedIn()) {
+                    if (liff.isInClient()) {
 
-                    liff.login({
-                        redirectUri: "verify.html"
-                    });
+                        console.log('LIFF in LINE Client');
 
-                } else {
-                    const profile = await liff.getProfile();
+                        if (!liff.isLoggedIn()) {
 
-                    console.log('User profile:', profile);
+                            liff.login({
+                                redirectUri: "verify.html"
+                            });
 
-                    window.location.replace(`verify.html`);
-                }
-            } else {
-                console.log('LIFF not in LINE Client');
+                        } else {
+                            const profile = await liff.getProfile();
 
-                window.location.replace(`verify.html`);
+                            console.log('User profile:', profile);
 
-                liff.logout();
+                            window.location.replace(`verify.html`);
+                        }
+                    } else {
+                        console.log('LIFF not in LINE Client');
 
-                console.log('User logged out');
+                        window.location.replace(`verify.html`);
 
-                return;
-            }
+                        liff.logout();
+
+                        console.log('User logged out');
+
+                        return;
+                    }
+                }).catch((err) => {
+                    console.error('LIFF initialization failed ', err);
+                });
+            });
         }
     </script>
 </body>
