@@ -124,6 +124,7 @@
     // (ทางเลือก) ถ้าจะใช้ LIFF เพื่อดึง userId อัตโนมัติ ให้ใส่ LIFF_ID และเอา block LIFF ด้านล่างออกจากคอมเมนต์
     // const USE_LIFF = false;
     // const LIFF_ID  = "YOUR_LIFF_ID";
+
     const id = "2008716446-QzCHty1r"; // -- log in extract slip
     const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
 
@@ -152,10 +153,15 @@
                 liff.ready.then(async () => {
                     // LIFF is ready
                     console.log('LIFF Started');
-
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    console.log('Clean URL: ' + cleanUrl);
                     if (!liff.isLoggedIn()) {
 
                         liff.login();
+                    }
+                    else {
+                        console.log('LIFF already logged in');
+                        location.replace(cleanUrl);
                     }
 
                     var profile = await liff.getProfile();
@@ -280,7 +286,7 @@
             }
 
             const rec = result.data.receiver.account.name.th
-            console.log("receiver : " + rec);
+            console.log(rec);
 
             if (rec !== undefined || rec !== null || rec !== '') {
                 if (rec.includes("KERRY") || rec.includes("เคซีดี")) {
@@ -354,7 +360,7 @@
             $("#uploadForm").reset();
             preview.classList.add("d-none");
 
-            await logOut();
+            await liff.logout();
 
             setTimeout(() => { liff.closeWindow(); }, 500);
         }
@@ -366,18 +372,18 @@
 
         console.log('logOut');
         
-        await liff.logout();
+        liff.logout();
         //window.location.reload();
     }
 
-    async function clearQueryString() {
+    // async function clearQueryString() {
 
-      console.log('clearQueryString');
+    //   console.log('clearQueryString');
 
-      if (window.location.search || window.location.hash) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
+    //   if (window.location.search || window.location.hash) {
+    //     window.history.replaceState({}, document.title, window.location.pathname);
+    //   }
+    // }
 
 
     // // อัปโหลดไป .NET API
