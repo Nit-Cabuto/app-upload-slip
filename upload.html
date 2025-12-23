@@ -157,7 +157,7 @@
     //-------------------------- Lastly, main code ------------------------  
 
     //const id = "2008716446-QzCHty1r"; // -- log in extract slip
-    //const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
+    const tokenSlip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
 
     let profileName = null;
     let userIdLine = null;
@@ -212,7 +212,7 @@
             const resp = await fetch('https://developer.easyslip.com/api/v1/verify', {
                 method: "POST",
                 headers: {
-                    'Authorization': `Bearer ${tokehslip}`
+                    'Authorization': `Bearer ${tokenSlip}`
                   },
                 body: formData
             });
