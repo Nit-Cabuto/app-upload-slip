@@ -276,17 +276,19 @@
                     statusDiv.textContent = "สลิป : " + resultExtract.result;
                     statusDiv.className = 'success';
 
-                    await liff.sendMessages([
-                        {
-                            type: "text",
-                            text: "สลิปคุณ : "+ profileName + "\nสถานะ : " + resultExtract.result,
-                        },
-                        {
-                            type: "sticker",
-                            packageId: "446",
-                            stickerId: "1988"
-                        }
-                    ]);
+                    const message = [
+                      {
+                        type: "text",
+                        text: "สลิปคุณ : " + profileName + "\nสถานะ : " + resultExtract.result,
+                      },
+                      {
+                        type: "sticker",
+                        packageId: "446",
+                        stickerId: "1988"
+                      }
+                    ];
+
+                    await liff.sendMessages(message);
                 }
                 else {
                     statusDiv.textContent = 'สลิปนี้ไม่ใช่ของ KERRY กรุณาตรวจสอบอีกครั้ง';
