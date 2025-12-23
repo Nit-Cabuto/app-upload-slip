@@ -179,7 +179,7 @@
 
     //------------------------------
 
-    // แสดงตัวอย่างรูป
+    //-- แสดงตัวอย่างรูป --
     slipFile.addEventListener("change", (e) => {
       const f = e.target.files?.[0];
       if (!f) { preview.classList.add("d-none"); return; }
@@ -189,6 +189,8 @@
       preview.classList.remove("d-none");
     });
 
+
+    // -- btn อัปโหลดไฟล์สลิป --
     btnUpload.addEventListener("click", async () => {
         const f = slipFile.files?.[0];
         const statusDiv = document.getElementById('status');
