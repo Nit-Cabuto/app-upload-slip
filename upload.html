@@ -31,12 +31,6 @@
 
           <h1 class="h4 mb-3">อัปโหลดสลิปธนาคาร</h1>
 
-          <!-- <div class="alert alert-info d-none" id="liffBox">
-            <div class="d-flex align-items-center gap-2">
-              <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-              <strong>กำลังโหลดโปรไฟล์ LIFF...</strong>
-            </div>
-          </div> -->
 
           <form id="uploadForm" class="needs-validation" novalidate>
             <div class="mb-3">
@@ -49,27 +43,7 @@
               <div class="col-md-6">
                 <img id="preview" class="img-fluid preview-img w-100 d-none" alt="ตัวอย่างรูป">
               </div>
-              <!-- <div class="col-md-6">
-                <label class="form-label">ข้อความที่จะส่ง LINE (แก้ไขได้)</label>
-                <textarea id="lineText" class="form-control mono" rows="7"
-                  placeholder="ระบบจะใส่ผลลัพธ์จาก .NET API ให้อัตโนมัติ (แก้ไขได้ก่อนส่ง)"></textarea>
-
-                <div class="form-text mt-2">
-                  <strong>ผู้รับ LINE:</strong>
-                  <div class="input-group mt-1">
-                    <span class="input-group-text">userId</span>
-                    <input type="text" class="form-control" id="lineUserId" placeholder="ใส่ LINE userId หรือปล่อยให้ LIFF เติมให้" />
-                  </div>
-                </div>
-              </div> -->
             </div>
-
-            <!-- <div class="mb-3">
-              <div class="progress d-none" id="progressWrap" style="height: 10px;">
-                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%"></div>
-              </div>
-            </div> -->
-            
             <div id="status"></div>
 
             <div class="d-grid gap-2"> 
@@ -77,33 +51,11 @@
               <button type="button" id="btnUpload" class="btn btn-primary">
                 อัปโหลด
               </button>
-              <!-- <button type="button" id="btnSendLine" class="btn btn-success" disabled>
-                ส่งข้อความ LINE
-              </button>
-              <button type="button" id="btnReset" class="btn btn-outline-secondary">
-                รีเซ็ต
-              </button> -->
             </div>
           </form>
 
           <hr class="my-4">
-
-          <!-- <div>
-            <h2 class="h6">ผลลัพธ์จาก .NET API</h2>
-            <pre id="apiResult" class="mono bg-light p-3 rounded small" style="white-space: pre-wrap;"></pre>
-          </div> -->
-
-          <!-- <div class="mt-3">
-            <h2 class="h6">สถานะ</h2>
-            <div id="statusArea" class="small text-secondary">พร้อมทำงาน</div>
-          </div> -->
-
         </div>
-
-        <!-- <p class="text-center text-muted small mt-3">
-          *เพื่อความปลอดภัย ห้ามใส่ LINE Channel Access Token ในฝั่งเว็บ — ให้ส่งผ่าน backend เท่านั้น
-        </p> -->
-
       </div>
     </div>
   </div>
@@ -129,14 +81,13 @@
 
     async function mainData() {
 
-      console.log('check mainliff');
+      console.log('start liff');
 
       const liffData = sessionStorage.getItem("liffId");
 
       console.log("LIFF ID from sessionStorage: " + liffData);
 
       liff.init({ liffId: liffData }, function () {
-
                 // LIFF is ready
                 liff.ready.then(async () => {
                     
@@ -161,7 +112,7 @@
                     }
                     else {
                         
-                        console.log('LIFF already logged in');
+                      console.log('LIFF already logged in');
                         //location.replace(cleanUrl);
 
                       var profile = await liff.getProfile();
