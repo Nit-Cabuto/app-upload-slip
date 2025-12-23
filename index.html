@@ -76,7 +76,7 @@
 
                     console.log('LIFF Started');
 
-                    // check liff in client mobile or web
+                    //-- check liff in client mobile or web
                     if (liff.isInClient()) {
 
                         console.log('LIFF in LINE Client Mobile');
@@ -100,9 +100,9 @@
                         }
                     } else {
 
-                        sessionStorage.setItem("liffId", liffId);
-
                         console.log('LIFF not in LINE Client');
+
+                        //sessionStorage.setItem("liffId", liffId);
 
                         //window.location.replace(`upload.html`);
 

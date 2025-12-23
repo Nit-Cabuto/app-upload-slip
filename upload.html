@@ -64,18 +64,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
   <script>
-    // =======================
-    // ตั้งค่าให้ตรงระบบคุณ
-    // =======================
-    // .NET API ที่รับไฟล์ (multipart/form-data) และคืนผล
-    //const API_UPLOAD_URL = "https://localhost:7136/extractSlip/extractTextFile"; // ตัวอย่าง
-
-    // Backend endpoint ของคุณที่ทำหน้าที่ "proxy/push LINE"
-    //const LINE_PUSH_URL  = "https://localhost:7136/line/push"; // ตัวอย่าง
-
-    // (ทางเลือก) ถ้าจะใช้ LIFF เพื่อดึง userId อัตโนมัติ ให้ใส่ LIFF_ID และเอา block LIFF ด้านล่างออกจากคอมเมนต์
-    // const USE_LIFF = false;
-    // const LIFF_ID  = "YOUR_LIFF_ID";
 
     mainData();
 
@@ -86,6 +74,15 @@
       const liffData = sessionStorage.getItem("liffId");
 
       console.log("LIFF ID from sessionStorage: " + liffData);
+
+      if (!liffData) {
+
+        console.error('No LIFF ID found in sessionStorage');
+
+        window.location.replace(`index.html`);
+
+        return;
+      }
 
       liff.init({ liffId: liffData }, function () {
                 // LIFF is ready
@@ -102,6 +99,8 @@
                       console.log('LIFF not in LINE Client');
 
                       liff.logout();
+
+                      window.location.replace(`index.html`);
 
                       return;
                     }
@@ -157,8 +156,8 @@
 
     //-------------------------- Lastly, main code ------------------------  
 
-    const id = "2008716446-QzCHty1r"; // -- log in extract slip
-    const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
+    //const id = "2008716446-QzCHty1r"; // -- log in extract slip
+    //const tokehslip = "81cae111-e8de-4266-b21c-1aa364d0ecfb";
 
     let profileName = null;
     let userIdLine = null;
@@ -168,15 +167,15 @@
     const $ = (s) => document.querySelector(s);
     const slipFile = $("#slipFile");
     const preview = $("#preview");
-    const lineText = $("#lineText");
-    const lineUserId = $("#lineUserId");
+    //const lineText = $("#lineText");
+    //const lineUserId = $("#lineUserId");
     const btnUpload = $("#btnUpload");
-    const btnSendLine = $("#btnSendLine");
-    const btnReset = $("#btnReset");
-    const apiResult = $("#apiResult");
-    const statusArea = $("#statusArea");
-    const progressWrap = $("#progressWrap");
-    const progressBar = $("#progressBar");
+    //const btnSendLine = $("#btnSendLine");
+    //const btnReset = $("#btnReset");
+    //const apiResult = $("#apiResult");
+    //const statusArea = $("#statusArea");
+    //const progressWrap = $("#progressWrap");
+    //const progressBar = $("#progressBar");
 
     //------------------------------
 
@@ -273,6 +272,9 @@
                     console.log(response);
                     
                     const resultExtract = await response.json();
+
+                    statusDiv.textContent = "สลิป : " + resultExtract.result;
+                    statusDiv.className = 'success';
 
                     await liff.sendMessages([
                         {
