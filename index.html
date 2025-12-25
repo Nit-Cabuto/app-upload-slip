@@ -104,10 +104,9 @@
 
                         console.log('LIFF not in LINE Client');
 
-                        //sessionStorage.setItem("liffId", liffId);
-
-                        //window.location.replace(`upload.html`);
-
+                        sessionStorage.setItem("liffId", liffId);
+                        window.location.replace(`upload.html`);
+                        
                         var context = liff.getContext();
                         console.log(context);
                         liff.logout();
