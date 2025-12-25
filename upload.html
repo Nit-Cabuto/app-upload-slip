@@ -109,18 +109,18 @@
                       // return;
                     }
 
-                    // $.blockUI({
-                    //   message: '<h4>กำลังอัปโหลด...</h4>',
-                    //   css: {
-                    //     padding: '15px',
-                    //     borderRadius: '8px'
-                    //   },
-                    //   overlayCSS: {
-                    //     backgroundColor: '#000',
-                    //     opacity: 0.5,
-                    //     cursor: 'wait'
-                    //   }
-                    // });
+                    $.blockUI({
+                      message: '<h4>กำลังอัปโหลด...</h4>',
+                      css: {
+                        padding: '15px',
+                        borderRadius: '8px'
+                      },
+                      overlayCSS: {
+                        backgroundColor: '#000',
+                        opacity: 0.5,
+                        cursor: 'wait'
+                      }
+                    });
                                             
                     // -- check login --
                     if (!liff.isLoggedIn()) {
