@@ -30,8 +30,8 @@
     <!-- <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script> -->
     <script charset="utf-8" src="./js/scrips.js"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script> -->
 
     <script>
         
@@ -104,16 +104,16 @@
 
                         console.log('LIFF not in LINE Client');
 
-                        sessionStorage.setItem("liffId", liffId);
-                        window.location.replace(`upload.html`);
-                        
-                        var context = liff.getContext();
-                        console.log(context);
-                        liff.logout();
+                        // sessionStorage.setItem("liffId", liffId);
+                        // window.location.replace(`upload.html`);
 
+                        // var context = liff.getContext();
+                        // console.log(context);
+
+                        liff.logout();
                         console.log('User logged out');
 
-                        return;
+                        //return;
                     }
                 }).catch((err) => {
                     console.error('LIFF initialization failed ', err);
