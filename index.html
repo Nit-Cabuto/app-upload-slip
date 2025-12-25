@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KLN SEAPORT</title>
-    <style>
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- <style>
         body {
             margin: 0;
             padding: 0;
@@ -18,15 +19,16 @@
             max-width: 200px;
             max-height: 200px;
         }
-    </style>
+    </style> -->
 </head>
 <body>
     
     <div class="container">
-        <img src="./logo.png" alt="Logo" class="logo">
+        <img src="./img/logo.png" alt="Logo" class="logo">
     </div>
 
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+    <!-- <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script> -->
+    <script charset="utf-8" src="./js/scrips.js"></script>
     <script>
         
         const liffId = "2008716446-QzCHty1r"; // -- log in extract slip
@@ -69,9 +71,7 @@
         // }
 
         async function main() {
-
             await liff.init({ liffId: liffId }, function () {
-
                 liff.ready.then(async () => {
 
                     console.log('LIFF Started');
@@ -82,7 +82,6 @@
                         console.log('LIFF in LINE Client Mobile');
 
                         if (!liff.isLoggedIn()) {
-
                             liff.login({
                                 redirectUri: "upload.html"
                             });
@@ -95,7 +94,6 @@
                             console.log('User logged in');
 
                             sessionStorage.setItem("liffId", liffId);
-
                             window.location.replace(`upload.html`);
                         }
                     } else {
@@ -106,6 +104,8 @@
 
                         //window.location.replace(`upload.html`);
 
+                        var context = liff.getContext();
+                        console.log(context);
                         liff.logout();
 
                         console.log('User logged out');
