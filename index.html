@@ -29,6 +29,9 @@
 
     <!-- <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script> -->
     <script charset="utf-8" src="./js/scrips.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+
     <script>
         
         const liffId = "2008716446-QzCHty1r"; // -- log in extract slip
@@ -80,6 +83,14 @@
                     if (liff.isInClient()) {
 
                         console.log('LIFF in LINE Client Mobile');
+
+                        $.blockUI({
+                            message: '<h4>กำลังอัปโหลด...</h4>',
+                            css: {
+                                padding: '15px',
+                                borderRadius: '8px'
+                            }
+                        });
 
                         if (!liff.isLoggedIn()) {
                             liff.login({
